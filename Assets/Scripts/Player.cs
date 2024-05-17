@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
+    private bool isWalking;
     // Update is called once per frame
     private void Update()
     {
@@ -32,7 +33,15 @@ public class Player : MonoBehaviour
         inputVector = inputVector.normalized;
 
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
+
+        isWalking = moveDir != Vector3.zero;
+
         transform.position += moveDir * Time.deltaTime * moveSpeed;
         transform.forward = Vector3.Lerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
     }
 }
