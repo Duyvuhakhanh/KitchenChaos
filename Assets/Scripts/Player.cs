@@ -8,8 +8,27 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotateSpeed = 5f;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask interactLayer;
+
+    private Vector3 lastMoveDir;
     private bool isWalking;
     // Update is called once per frame
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
+    }
+
+    private void GameInput_OnInteractAction(object sender, System.EventArgs e)
+    {
+        float raycastDistance = 2f;
+        if (Physics.Raycast(transform.position, lastMoveDir, out RaycastHit hitInfo, raycastDistance, interactLayer))
+        {
+            if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
+        }
+    }
+
     private void Update()
     {
         HandleMovement();
@@ -24,7 +43,7 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                clearCounter.Interact();
+               // clearCounter.Interact();
             }
         }
     }
@@ -33,14 +52,16 @@ public class Player : MonoBehaviour
         Vector2 inputVector = gameInput.GetInputVectorNomarlized();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
-
         isWalking = moveDir != Vector3.zero;
-
+        if (moveDir != Vector3.zero)
+        {
+            lastMoveDir = moveDir;
+        }
         float playerSize = .7f;
         float playerRadius = transform.localScale.x / 2;
         float moveDistance = Time.deltaTime * moveSpeed;
 
-        transform.forward = Vector3.Lerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+        transform.forward = Vector3.Slerp(transform.forward, lastMoveDir, Time.deltaTime * rotateSpeed);
 
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerSize, playerRadius, moveDir, moveDistance);
         if (!canMove)
@@ -61,7 +82,7 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    //moveDir = Vector3.zero;
+                    moveDir = Vector3.zero;
                 }
 
             }

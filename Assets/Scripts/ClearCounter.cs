@@ -6,9 +6,6 @@ public class ClearCounter : MonoBehaviour
 {
     public void Interact()
     {
-        if(Time.frameCount % 30 == 0)
-        {
-            Debug.Log("Interact !!" + gameObject.name);
-        }
+        Debug.Log("Interact !!" + gameObject.name);
     }
 }
