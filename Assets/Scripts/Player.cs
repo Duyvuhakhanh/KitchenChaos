@@ -15,11 +15,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         Instance = this;
     }
-    public ClearCounter selectedClearCounter { get; private set; }
+    public BaseCounter selectedClearCounter { get; private set; }
     public event EventHandler<OnSelectedCounterChangeArg> OnSelectedCounterChange;
     public class OnSelectedCounterChangeArg : EventArgs
     {
-        public ClearCounter clearCounter;
+        public BaseCounter clearCounter;
     }
     private Vector3 lastMoveDir;
     private bool isWalking;
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         float raycastDistance = 2f;
         if(Physics.Raycast(transform.position, lastMoveDir, out RaycastHit hitInfo, raycastDistance, interactLayer))
         {
-            if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
+            if (hitInfo.transform.TryGetComponent(out BaseCounter clearCounter))
             {
                 SetSelectedCounter(clearCounter);
             }
@@ -104,12 +104,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         transform.position += moveDir * moveDistance;
     }
-    private void SetSelectedCounter(ClearCounter clearCounter)
+    private void SetSelectedCounter(BaseCounter baseCounter)
     {
-        if(selectedClearCounter != clearCounter)
+        if(selectedClearCounter != baseCounter)
         {
-            OnSelectedCounterChange?.Invoke(this, new OnSelectedCounterChangeArg { clearCounter = clearCounter });
-            selectedClearCounter = clearCounter;
+            OnSelectedCounterChange?.Invoke(this, new OnSelectedCounterChangeArg { clearCounter = baseCounter });
+            selectedClearCounter = baseCounter;
         }
     }
     public bool IsWalking()
