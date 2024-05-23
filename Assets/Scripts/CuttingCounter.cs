@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CuttingCounter : BaseCounter
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
+    public event EventHandler OnCut;
+    private int cuttingProcess;
+    public class CuttingEventArg : EventArgs
+    {
+        public float processNomarlized;
+    }
     public override void Interact(Player player)
     {
 
@@ -30,10 +38,14 @@ public class CuttingCounter : BaseCounter
     {
         if(HasKitchenObject())
         {
-            var kitchenObject = GetKitchenObject();
-            KitchenObjectsSO ouputKitchenObjectSO = GetOutputFromInput(kitchenObject.GetKitchenObjectsSO());
-            kitchenObject.DestroySelf();
-            KitchenObject.SwapKitchenObject(ouputKitchenObjectSO, this);
+            cuttingProcess ++ ;
+            if(cuttingProcess >= 3)
+            {
+                var kitchenObject = GetKitchenObject();
+                KitchenObjectsSO ouputKitchenObjectSO = GetOutputFromInput(kitchenObject.GetKitchenObjectsSO());
+                kitchenObject.DestroySelf();
+                KitchenObject.SwapKitchenObject(ouputKitchenObjectSO, this);
+            }
         }
     }
     public KitchenObjectsSO GetOutputFromInput(KitchenObjectsSO input)
