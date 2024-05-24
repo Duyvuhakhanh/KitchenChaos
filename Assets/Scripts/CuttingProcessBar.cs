@@ -9,11 +9,31 @@ public class CuttingProcessBar : MonoBehaviour
     [SerializeField] private Image processImage;
     private void Start()
     {
-        cuttingCounter.OnCut += CuttingCounter_OnCut;
+        cuttingCounter.OnProcessChanged += CuttingCounter_OnCut;
+
+        processImage.fillAmount = 0;
+        Hide();
     }
 
-    private void CuttingCounter_OnCut(object sender, System.EventArgs e)
+    private void CuttingCounter_OnCut(object sender, CuttingCounter.CuttingEventArg cuttingEventArg)
     {
-        throw new System.NotImplementedException();
+        processImage.fillAmount = cuttingEventArg.processNomarlized;
+
+        if(cuttingEventArg.processNomarlized == 0 || cuttingEventArg.processNomarlized == 1)
+        {
+            Hide();
+        }
+        else
+        {
+            Show();
+        }
+    }
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive (false);
     }
 }
