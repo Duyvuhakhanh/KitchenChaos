@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CuttingProcessBar : MonoBehaviour
+public class CuttingProcessBar : MonoBehaviour, IHasProcess
 {
     [SerializeField] private CuttingCounter cuttingCounter;
     [SerializeField] private Image processImage;
@@ -15,7 +15,7 @@ public class CuttingProcessBar : MonoBehaviour
         Hide();
     }
 
-    private void CuttingCounter_OnCut(object sender, CuttingCounter.CuttingEventArg cuttingEventArg)
+    private void CuttingCounter_OnCut(object sender, IHasProcess.CuttingEventArg cuttingEventArg)
     {
         processImage.fillAmount = cuttingEventArg.processNomarlized;
 

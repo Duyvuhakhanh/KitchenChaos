@@ -6,6 +6,7 @@ using UnityEngine;
 public class ContainerCounter : BaseCounter
 {
     public event EventHandler OnInteractCounter;
+    [SerializeField] private KitchenObjectsSO kitchenObjectsSO;
 
     public override void Interact(Player player)
     {
@@ -16,4 +17,6 @@ public class ContainerCounter : BaseCounter
             OnInteractCounter?.Invoke(this, EventArgs.Empty);
         }
     }
+    public KitchenObjectsSO GetKitchenObjectsSO() { return kitchenObjectsSO; }
+
 }

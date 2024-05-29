@@ -5,9 +5,7 @@ using UnityEngine;
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
 
-
     [SerializeField] private Transform topCenterPoint;
-    [SerializeField] private KitchenObjectsSO kitchenObjectsSO;
     private KitchenObject kitchenObject;
 
     public virtual void Interact(Player player)
@@ -29,7 +27,6 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
             kitchenObject = null;
         }
     }
-    public KitchenObjectsSO GetKitchenObjectsSO() { return kitchenObjectsSO; }
     public KitchenObject GetKitchenObject()
     {
         return kitchenObject;

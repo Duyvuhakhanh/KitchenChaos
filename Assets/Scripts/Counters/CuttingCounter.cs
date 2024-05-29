@@ -10,10 +10,7 @@ public class CuttingCounter : BaseCounter
     public event EventHandler<CuttingEventArg> OnProcessChanged;
     public event EventHandler OnCut;
     private int cuttingProcess;
-    public class CuttingEventArg : EventArgs
-    {
-        public float processNomarlized;
-    }
+    
     public override void Interact(Player player)
     {
 
