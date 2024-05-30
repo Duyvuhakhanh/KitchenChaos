@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static IHasProcess;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IHasProcess
 {
     [SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
-    public event EventHandler<CuttingEventArg> OnProcessChanged;
     public event EventHandler OnCut;
+    public event EventHandler<OnProcessChangedEventArg> OnProcessChanged;
+
     private int cuttingProcess;
     
     public override void Interact(Player player)
@@ -33,7 +35,7 @@ public class CuttingCounter : BaseCounter
 
                 cuttingProcess = 0;
                 CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSO(GetKitchenObject().GetKitchenObjectsSO());
-                OnProcessChanged?.Invoke(this, new CuttingEventArg() { processNomarlized = (float)cuttingProcess / cuttingRecipeSO.cuttingProcessMax });
+                OnProcessChanged?.Invoke(this, new OnProcessChangedEventArg() { processNomarlized = (float)cuttingProcess / cuttingRecipeSO.cuttingProcessMax });
             }
         }
     }
@@ -45,7 +47,7 @@ public class CuttingCounter : BaseCounter
             {
                 cuttingProcess++;
                 CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSO(GetKitchenObject().GetKitchenObjectsSO());
-                OnProcessChanged?.Invoke(this, new CuttingEventArg() { processNomarlized = (float)cuttingProcess / cuttingRecipeSO.cuttingProcessMax });
+                OnProcessChanged?.Invoke(this, new OnProcessChangedEventArg() { processNomarlized = (float)cuttingProcess / cuttingRecipeSO.cuttingProcessMax });
                 if (cuttingProcess >= cuttingRecipeSO.cuttingProcessMax)
                 {
                     var kitchenObject = GetKitchenObject();

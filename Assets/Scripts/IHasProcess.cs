@@ -6,12 +6,13 @@ using UnityEngine.UI;
 
 public interface IHasProcess 
 {
-  
-    public class CuttingEventArg : EventArgs
+    public event EventHandler<OnProcessChangedEventArg> OnProcessChanged;
+
+    public class OnProcessChangedEventArg : EventArgs
     {
         public float processNomarlized;
     }
-    private void CuttingCounter_OnCut(object sender, CuttingEventArg cuttingEventArg)
+    private void CuttingCounter_OnCut(object sender, OnProcessChangedEventArg cuttingEventArg)
     {
 
     }

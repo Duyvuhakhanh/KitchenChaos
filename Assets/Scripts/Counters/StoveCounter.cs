@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveCounter : BaseCounter
+public class StoveCounter : BaseCounter, IHasProcess
 {
     [SerializeField] private FryingRecipeSO[] fryingRecipeSOArray;
     [SerializeField] private BurningRecipeSO[] buringRecipeSOArray;
 
     public event EventHandler<StoveCounterEventArg> OnStoveCounterStateChanged;
+    public event EventHandler<IHasProcess.OnProcessChangedEventArg> OnProcessChanged;
     public class StoveCounterEventArg : EventArgs
     {
         public State state;
@@ -43,6 +44,7 @@ public class StoveCounter : BaseCounter
                     state = State.Fried;
                     OnStoveCounterStateChanged?.Invoke(this, new StoveCounterEventArg { state = state });
                 }
+                OnProcessChanged?.Invoke(this, new() { processNomarlized = cookingTimer / fryingRecipe.cookingTime });
                 break;
             case State.Fried:
                 burningTimer += Time.deltaTime;
@@ -50,9 +52,14 @@ public class StoveCounter : BaseCounter
                 {
                     GetKitchenObject().DestroySelf();
                     KitchenObject.SwapKitchenObject(burningRecipe.burnedObjectSO, this);
+
                     state = State.Burned;
+
+                    OnProcessChanged?.Invoke(this, new() { processNomarlized = 1f });
                     OnStoveCounterStateChanged?.Invoke(this, new StoveCounterEventArg { state = state });
                 }
+                OnProcessChanged?.Invoke(this, new() { processNomarlized = burningTimer / burningRecipe.buringMaxTime });
+
                 break;
             case State.Burned:
                 break;
@@ -67,6 +74,7 @@ public class StoveCounter : BaseCounter
             if (!player.HasKitchenObject())
             {
                 state = State.Idle;
+                OnProcessChanged?.Invoke(this, new() { processNomarlized = 0f });
                 GetKitchenObject().SetKitchenObjectParent(player);
                 ClearKitchenObject();
             }
