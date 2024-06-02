@@ -24,6 +24,18 @@ public class CuttingCounter : BaseCounter, IHasProcess
                 ClearKitchenObject();
 
             }
+            else
+            {
+                var playerObj = player.GetKitchenObject();
+                var clearCounterKitchenObj = GetKitchenObject();
+                if (playerObj.TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    if (plateKitchenObject.TryAddIngridient(clearCounterKitchenObj.GetKitchenObjectsSO()))
+                    {
+                        clearCounterKitchenObj.DestroySelf();
+                    }
+                }
+            }
         }
         else
         {

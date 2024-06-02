@@ -78,6 +78,22 @@ public class StoveCounter : BaseCounter, IHasProcess
                 GetKitchenObject().SetKitchenObjectParent(player);
                 ClearKitchenObject();
             }
+            else
+            {
+                var playerObj = player.GetKitchenObject();
+                var clearCounterKitchenObj = GetKitchenObject();
+                if (playerObj.TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    if (plateKitchenObject.TryAddIngridient(clearCounterKitchenObj.GetKitchenObjectsSO()))
+                    {
+                        clearCounterKitchenObj.DestroySelf();
+                    }
+                }
+
+                state = State.Idle;
+                OnProcessChanged?.Invoke(this, new() { processNomarlized = 0f });
+                ClearKitchenObject();
+            }
         }
         else
         {
